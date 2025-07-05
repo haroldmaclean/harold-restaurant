@@ -18,8 +18,9 @@
         "name": "next"
       }
     ],
+    "baseUrl": ".", // ✅ Required for path aliases
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"] // ✅ Now you can import using "@/components/..." etc.
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
