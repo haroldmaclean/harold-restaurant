@@ -4,6 +4,12 @@ export const siteConfig = {
   contactNumber: '012 345 6789',
   whatsappNumber: '+27 71 234 5678',
   address: '123 Food Street, Polokwane, South Africa',
+  about: `Welcome to our restaurant! We’re passionate about serving fresh,
+delicious food made with care. Whether you're here for a quick bite
+or a family meal, we’ve got something for everyone.`,
+  aboutImage: '/images/restaurant.jpg', // put this image in your /public/images folder
+  quote:
+    'Good food is the foundation of genuine happiness. – Auguste Escoffier',
 }
 
 // export const siteConfig = {
