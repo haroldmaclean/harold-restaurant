@@ -1,3 +1,5 @@
+import { siteConfig } from '@/config/site'
+
 export default function ContactPage() {
   return (
     <main className='p-8 max-w-3xl mx-auto'>
@@ -8,13 +10,13 @@ export default function ContactPage() {
       </p>
       <ul className='space-y-2'>
         <li>
-          <strong>Phone:</strong> 012 345 6789
+          <strong>Phone:</strong> {siteConfig.contactNumber}
         </li>
         <li>
-          <strong>WhatsApp:</strong> +27 71 234 5678
+          <strong>WhatsApp:</strong> {siteConfig.whatsappNumber}
         </li>
         <li>
-          <strong>Address:</strong> 123 Food Street, Polokwane, South Africa
+          <strong>Address:</strong> {siteConfig.address}
         </li>
       </ul>
     </main>

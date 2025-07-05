@@ -1,13 +1,15 @@
+import { siteConfig } from '@/config/site'
+
 export default function HomePage() {
   return (
     <main className='p-8 max-w-5xl mx-auto text-center'>
       <section className='mb-10'>
         <h1 className='text-4xl font-bold mb-4'>
-          Welcome to Harold&apos;s Kitchen
+          Welcome to {siteConfig.businessName}
         </h1>
         <p className='text-gray-700 text-lg'>
-          Serving flavorful dishes made with love. Explore our menu, learn about
-          us, or get in touch.
+          {siteConfig.description} Explore our menu, learn about us, or get in
+          touch.
         </p>
       </section>
 
@@ -24,7 +26,7 @@ export default function HomePage() {
         </div>
         <div className='bg-white rounded-lg shadow p-6 hover:shadow-md transition'>
           <h2 className='text-xl font-semibold mb-2'>Contact</h2>
-          <p className='text-gray-600'>Need help? Reach out to us easily.</p>
+          <p className='text-gray-600'>Find us at {siteConfig.address}</p>
         </div>
       </section>
     </main>
