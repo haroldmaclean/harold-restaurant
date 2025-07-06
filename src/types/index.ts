@@ -7,3 +7,11 @@ export type MenuItemType = {
   createdAt?: string
   updatedAt?: string
 }
+
+// User type used for authentication and admin
+export interface UserType {
+  name: string
+  email: string
+  password: string
+  isAdmin?: boolean
+}
