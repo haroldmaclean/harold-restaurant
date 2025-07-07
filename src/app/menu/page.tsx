@@ -1,3 +1,6 @@
+// Force dynamic rendering to prevent build-time MongoDB connection errors on Vercel
+export const dynamic = 'force-dynamic'
+
 import { connectDB } from '@/lib/mongodb'
 import { MenuItem } from '@/models/MenuItem'
 import { MenuItemType } from '@/types'
