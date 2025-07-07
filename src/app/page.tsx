@@ -38,6 +38,25 @@ export default function HomePage() {
           </div>
         </Link>
       </section>
+      <section className='mt-12 text-center'>
+        <p className='text-gray-700 mb-4'>
+          Want to manage your restaurant or explore admin features?
+        </p>
+        <div className='flex justify-center gap-4'>
+          <Link
+            href='/auth/register'
+            className='px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition'
+          >
+            Register
+          </Link>
+          <Link
+            href='/auth/login'
+            className='px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition'
+          >
+            Login
+          </Link>
+        </div>
+      </section>
     </main>
   )
 }

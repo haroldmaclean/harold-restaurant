@@ -1,28 +1,37 @@
-// src/app/admin/page.tsx
 import { cookies as getCookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import { connectDB } from '@/lib/mongodb'
 import { MenuItem } from '@/models/MenuItem'
 import { MenuItemType } from '@/types'
-import AdminItemCard from '../components/AdminItemCard'
+import AdminItemCard from '@/app/components/AdminItemCard'
 
 const JWT_SECRET = process.env.JWT_SECRET as string
 
-export default async function AdminPage() {
-  const cookieStore = getCookies() as unknown as {
-    get(name: string): { value: string } | undefined
-  }
+// Ensure environment variable is defined
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET is not set in environment variables')
+}
 
-  const token = cookieStore.get('token')?.value
+// Helper to get token value from cookies safely
+async function getCookieValue(name: string): Promise<string | undefined> {
+  const cookieStore = await getCookies()
+  return cookieStore.get(name)?.value
+}
+
+export default async function AdminPage() {
+  const token = await getCookieValue('token')
   if (!token) return redirect('/')
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload
-    if (!decoded || !decoded.email || !decoded.isAdmin) {
+
+    // Reject if user is not admin
+    if (!decoded?.email || !decoded?.isAdmin) {
       return redirect('/')
     }
 
+    // Fetch menu items
     await connectDB()
     const menuItems: MenuItemType[] = await MenuItem.find()
 
