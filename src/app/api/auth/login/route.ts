@@ -5,8 +5,6 @@ import { connectDB } from '@/lib/mongodb'
 import { User } from '@/models/User'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key'
-
-// Type-safe expiresIn value (2 days)
 const expiresIn: SignOptions['expiresIn'] = '2d'
 
 export async function POST(req: NextRequest) {
@@ -46,12 +44,22 @@ export async function POST(req: NextRequest) {
       isAdmin: user.isAdmin,
     }
 
-    const token = jwt.sign(payload, JWT_SECRET as string, { expiresIn })
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn })
 
-    return NextResponse.json(
-      { message: 'Login successful', token },
+    const response = NextResponse.json(
+      { message: 'Login successful' },
       { status: 200 }
     )
+
+    response.cookies.set('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 24 * 2, // 2 days
+    })
+
+    return response
   } catch (error) {
     console.error('Login error:', error)
     return NextResponse.json(

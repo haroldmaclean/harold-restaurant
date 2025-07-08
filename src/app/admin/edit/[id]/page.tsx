@@ -1,44 +1,50 @@
+// src/app/admin/edit/[id]/page.tsx
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 
-type MenuItem = {
-  _id: string
+interface EditForm {
   name: string
   description: string
   price: string
 }
 
-export default function EditMenuItem({ params }: { params: { id: string } }) {
-  const [item, setItem] = useState<MenuItem | null>(null)
+export default function EditMenuItem() {
+  const params = useParams()
+  const id = params?.id as string // cast it explicitly
   const [loading, setLoading] = useState(true)
-  const [form, setForm] = useState({ name: '', description: '', price: '' })
+  const [form, setForm] = useState<EditForm>({
+    name: '',
+    description: '',
+    price: '',
+  })
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
   const router = useRouter()
 
-  // Fetch the current item
   useEffect(() => {
     const fetchItem = async () => {
       try {
-        const res = await fetch(`/api/menu/${params.id}`)
+        const res = await fetch(`/api/menu/${id}`)
+        if (!res.ok) throw new Error('Item not found')
         const data = await res.json()
-        setItem(data)
         setForm({
           name: data.name,
           description: data.description,
-          price: data.price,
+          price: data.price.toString(),
         })
       } catch (err) {
         console.error('Fetch error:', err)
+        setError('Item not found or server error.')
       } finally {
         setLoading(false)
       }
     }
 
-    fetchItem()
-  }, [params.id])
+    if (id) fetchItem()
+  }, [id])
 
-  // Handle form input
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -47,22 +53,37 @@ export default function EditMenuItem({ params }: { params: { id: string } }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setSubmitting(true)
+    setError('')
 
-    const res = await fetch(`/api/menu/${params.id}/edit`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    })
+    try {
+      const payload = {
+        name: form.name,
+        description: form.description,
+        price: parseFloat(form.price),
+      }
 
-    if (res.ok) {
-      router.push('/admin') // Go back to admin dashboard
-    } else {
-      console.error('Update failed')
+      const res = await fetch(`/api/menu/${id}/edit`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+
+      if (res.ok) {
+        router.push('/admin')
+      } else {
+        setError('❌ Failed to update item.')
+      }
+    } catch (err) {
+      console.error('Update failed:', err)
+      setError('❌ Server error. Please try again.')
+    } finally {
+      setSubmitting(false)
     }
   }
 
   if (loading) return <p className='p-4'>Loading...</p>
-  if (!item) return <p className='p-4 text-red-600'>Item not found</p>
+  if (error) return <p className='p-4 text-red-600'>{error}</p>
 
   return (
     <main className='max-w-xl mx-auto p-6'>
@@ -78,6 +99,7 @@ export default function EditMenuItem({ params }: { params: { id: string } }) {
             required
           />
         </div>
+
         <div>
           <label className='block mb-1 font-medium'>Description</label>
           <textarea
@@ -89,22 +111,29 @@ export default function EditMenuItem({ params }: { params: { id: string } }) {
             required
           />
         </div>
+
         <div>
           <label className='block mb-1 font-medium'>Price (R)</label>
           <input
             name='price'
+            type='number'
+            step='0.01'
             value={form.price}
             onChange={handleChange}
             className='w-full border px-3 py-2 rounded'
             required
           />
         </div>
+
         <button
           type='submit'
-          className='bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700'
+          disabled={submitting}
+          className='bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50'
         >
-          Save Changes
+          {submitting ? 'Saving...' : 'Save Changes'}
         </button>
+
+        {error && <p className='text-red-600 mt-2'>{error}</p>}
       </form>
     </main>
   )

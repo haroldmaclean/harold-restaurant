@@ -1,22 +1,31 @@
-//File: src / app / api / menu / [id] / edit / route.ts
+// src/app/api/menu/[id]/edit/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { connectDB } from '@/lib/mongodb'
 import { MenuItem } from '@/models/MenuItem'
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> } // 👈 Make `params` a Promise
 ) {
   try {
+    const { id } = await context.params // ✅ Await the params properly
     await connectDB()
 
-    const { id } = params
-    const data = await req.json()
+    const { name, description, price } = await req.json()
 
-    const updatedItem = await MenuItem.findByIdAndUpdate(id, data, {
-      new: true,
-      runValidators: true,
-    })
+    // Validate fields
+    if (!name || !description || typeof price !== 'number') {
+      return NextResponse.json(
+        { error: 'All fields are required and price must be a number' },
+        { status: 400 }
+      )
+    }
+
+    const updatedItem = await MenuItem.findByIdAndUpdate(
+      id,
+      { name, description, price },
+      { new: true, runValidators: true }
+    )
 
     if (!updatedItem) {
       return NextResponse.json(
@@ -25,11 +34,14 @@ export async function PUT(
       )
     }
 
-    return NextResponse.json({ message: 'Menu item updated', updatedItem })
+    return NextResponse.json(
+      { message: 'Menu item updated successfully', updatedItem },
+      { status: 200 }
+    )
   } catch (error) {
     console.error('Update error:', error)
     return NextResponse.json(
-      { error: 'Failed to update item' },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }

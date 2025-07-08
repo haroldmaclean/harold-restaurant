@@ -7,14 +7,9 @@ import { MenuItemType } from '@/types'
 import AdminItemCard from '@/app/components/AdminItemCard'
 
 const JWT_SECRET = process.env.JWT_SECRET as string
+if (!JWT_SECRET) throw new Error('JWT_SECRET is not set')
 
-// Ensure environment variable is defined
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET is not set in environment variables')
-}
-
-// Helper to get token value from cookies safely
-async function getCookieValue(name: string): Promise<string | undefined> {
+async function getCookieValue(name: string) {
   const cookieStore = await getCookies()
   return cookieStore.get(name)?.value
 }
@@ -25,15 +20,28 @@ export default async function AdminPage() {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload
+    if (!decoded?.email || !decoded?.isAdmin) return redirect('/')
 
-    // Reject if user is not admin
-    if (!decoded?.email || !decoded?.isAdmin) {
-      return redirect('/')
+    await connectDB()
+
+    // Define expected raw type
+    type RawMenuItem = {
+      _id: { toString(): string }
+      name: string
+      description: string
+      price: number
     }
 
-    // Fetch menu items
-    await connectDB()
-    const menuItems: MenuItemType[] = await MenuItem.find()
+    // Use Mongoose generic to type lean() results directly
+    const rawItems = await MenuItem.find().lean<RawMenuItem[]>()
+
+    // Now rawItems is RawMenuItem[], no cast needed
+    const menuItems: MenuItemType[] = rawItems.map((item) => ({
+      _id: item._id.toString(),
+      name: item.name,
+      description: item.description,
+      price: item.price,
+    }))
 
     return (
       <main className='p-8 max-w-5xl mx-auto'>
@@ -41,7 +49,6 @@ export default async function AdminPage() {
         <p className='mb-8 text-gray-600'>
           Welcome, {decoded.email}! You can manage menu items below.
         </p>
-
         <div className='grid gap-6 md:grid-cols-2'>
           {menuItems.map((item) => (
             <AdminItemCard key={item._id} item={item} />

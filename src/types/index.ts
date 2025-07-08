@@ -3,7 +3,7 @@ export type MenuItemType = {
   _id: string
   name: string
   description: string
-  price: string
+  price: number // <-- changed from string to number
   createdAt?: string
   updatedAt?: string
 }

@@ -1,15 +1,16 @@
-// src/app/api/menu/[id]/delete/route.ts
 import { NextRequest, NextResponse } from 'next/server'
 import { connectDB } from '@/lib/mongodb'
 import { MenuItem } from '@/models/MenuItem'
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     await connectDB()
-    const { id } = params
+
+    // ✅ Await the context.params properly
+    const { id } = await context.params
 
     const deletedItem = await MenuItem.findByIdAndDelete(id)
 

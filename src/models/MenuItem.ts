@@ -2,9 +2,9 @@ import mongoose from 'mongoose'
 
 const MenuItemSchema = new mongoose.Schema(
   {
-    name: String,
-    description: String,
-    price: String,
+    name: { type: String, required: true },
+    description: { type: String, required: true },
+    price: { type: Number, required: true }, // ✅ changed to Number
   },
   { timestamps: true }
 )
