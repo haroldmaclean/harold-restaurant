@@ -1,3 +1,5 @@
+// src/app/admin/page.tsx
+
 import { cookies as getCookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import jwt, { JwtPayload } from 'jsonwebtoken'
@@ -5,6 +7,7 @@ import { connectDB } from '@/lib/mongodb'
 import { MenuItem } from '@/models/MenuItem'
 import { MenuItemType } from '@/types'
 import AdminItemCard from '@/app/components/AdminItemCard'
+import AdminNavbar from '../components/AdminNavbar'
 
 const JWT_SECRET = process.env.JWT_SECRET as string
 if (!JWT_SECRET) throw new Error('JWT_SECRET is not set')
@@ -24,7 +27,6 @@ export default async function AdminPage() {
 
     await connectDB()
 
-    // Define expected raw type
     type RawMenuItem = {
       _id: { toString(): string }
       name: string
@@ -32,10 +34,8 @@ export default async function AdminPage() {
       price: number
     }
 
-    // Use Mongoose generic to type lean() results directly
     const rawItems = await MenuItem.find().lean<RawMenuItem[]>()
 
-    // Now rawItems is RawMenuItem[], no cast needed
     const menuItems: MenuItemType[] = rawItems.map((item) => ({
       _id: item._id.toString(),
       name: item.name,
@@ -45,10 +45,26 @@ export default async function AdminPage() {
 
     return (
       <main className='p-8 max-w-5xl mx-auto'>
-        <h1 className='text-3xl font-bold mb-6'>Admin Dashboard</h1>
-        <p className='mb-8 text-gray-600'>
+        <AdminNavbar />
+
+        <div className='flex justify-between items-center mb-6'>
+          <h1 className='text-3xl font-bold'>Admin Dashboard</h1>
+
+          {/* ✅ Logout Button using POST */}
+          <form method='POST' action='/api/auth/logout'>
+            <button
+              type='submit'
+              className='bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 text-sm'
+            >
+              Logout
+            </button>
+          </form>
+        </div>
+
+        <p className='mb-6 text-gray-600'>
           Welcome, {decoded.email}! You can manage menu items below.
         </p>
+
         <div className='grid gap-6 md:grid-cols-2'>
           {menuItems.map((item) => (
             <AdminItemCard key={item._id} item={item} />
