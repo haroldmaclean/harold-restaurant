@@ -1,12 +1,19 @@
 // src/types/index.ts
+
+// Menu Item Type
 export type MenuItemType = {
   _id: string
   name: string
   description: string
-  price: number // <-- changed from string to number
+  price: number
   image?: string
   createdAt?: string
   updatedAt?: string
+}
+
+// Cart Item Type extends MenuItemType and adds quantity
+export type CartItem = MenuItemType & {
+  quantity: number
 }
 
 // User type used for authentication and admin
