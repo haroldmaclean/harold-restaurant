@@ -30,16 +30,17 @@ export default function MenuPage() {
       item.name.toLowerCase().includes(query.toLowerCase())
     )
     setFiltered(filteredResults)
-    console.log('🧪 Filtered menu items:', filteredResults) // ✅ Inspect image field here
   }, [query, items])
 
   const handleClear = () => setQuery('')
 
   return (
-    <main className='p-8 max-w-4xl mx-auto'>
-      <h1 className='text-3xl font-bold mb-6 text-center'>Our Menu</h1>
+    <main className='bg-gray-50 min-h-screen py-12 px-6'>
+      <h1 className='text-4xl font-bold mb-8 text-center text-orange-600'>
+        Our Menu
+      </h1>
 
-      <div className='flex items-center gap-2 max-w-md mx-auto mb-6'>
+      <div className='flex items-center gap-2 max-w-md mx-auto mb-10'>
         <div className='relative w-full'>
           <Search className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400' />
           <input
@@ -47,7 +48,7 @@ export default function MenuPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder='Search menu...'
-            className='w-full pl-10 pr-10 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-300'
+            className='w-full pl-10 pr-10 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white'
           />
           {query && (
             <XCircle
@@ -60,26 +61,39 @@ export default function MenuPage() {
         </div>
       </div>
 
-      <div className='grid gap-6 md:grid-cols-2'>
-        {filtered.map((item) => (
-          <div key={item._id} className='bg-white rounded-lg shadow p-6'>
-            {item.image && (
-              <div className='relative w-full h-48 mb-4'>
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  className='object-cover rounded border'
-                  sizes='(max-width: 768px) 100vw, 50vw'
-                />
+      {filtered.length === 0 ? (
+        <p className='text-center text-gray-500'>No items found.</p>
+      ) : (
+        <div className='grid gap-8 md:grid-cols-2'>
+          {filtered.map((item) => (
+            <div
+              key={item._id}
+              className='bg-white rounded-xl shadow-md hover:shadow-lg transition overflow-hidden'
+            >
+              {item.image && (
+                <div className='relative w-full h-48'>
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    fill
+                    className='object-cover'
+                    sizes='(max-width: 768px) 100vw, 50vw'
+                  />
+                </div>
+              )}
+              <div className='p-5'>
+                <h2 className='text-2xl font-semibold text-gray-800 mb-2'>
+                  {item.name}
+                </h2>
+                <p className='text-gray-600 mb-3'>{item.description}</p>
+                <span className='text-green-700 font-bold'>
+                  Price: R{item.price.toFixed(2)}
+                </span>
               </div>
-            )}
-            <h2 className='text-xl font-semibold mb-2'>{item.name}</h2>
-            <p className='text-gray-600 mb-2'>{item.description}</p>
-            <span className='font-bold text-green-700'>R{item.price}</span>
-          </div>
-        ))}
-      </div>
+            </div>
+          ))}
+        </div>
+      )}
     </main>
   )
 }
