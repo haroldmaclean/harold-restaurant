@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Search, XCircle } from 'lucide-react'
 import { MenuItemType } from '@/types'
+import Image from 'next/image'
 
 export default function MenuPage() {
   const [items, setItems] = useState<MenuItemType[]>([])
@@ -29,11 +30,10 @@ export default function MenuPage() {
       item.name.toLowerCase().includes(query.toLowerCase())
     )
     setFiltered(filteredResults)
+    console.log('🧪 Filtered menu items:', filteredResults) // ✅ Inspect image field here
   }, [query, items])
 
-  const handleClear = () => {
-    setQuery('')
-  }
+  const handleClear = () => setQuery('')
 
   return (
     <main className='p-8 max-w-4xl mx-auto'>
@@ -50,13 +50,12 @@ export default function MenuPage() {
             className='w-full pl-10 pr-10 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring focus:border-blue-300'
           />
           {query && (
-            <span title='Clear search'>
-              <XCircle
-                className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-red-500'
-                size={18}
-                onClick={handleClear}
-              />
-            </span>
+            <XCircle
+              className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-red-500'
+              size={18}
+              onClick={handleClear}
+              aria-label='Clear search'
+            />
           )}
         </div>
       </div>
@@ -64,6 +63,17 @@ export default function MenuPage() {
       <div className='grid gap-6 md:grid-cols-2'>
         {filtered.map((item) => (
           <div key={item._id} className='bg-white rounded-lg shadow p-6'>
+            {item.image && (
+              <div className='relative w-full h-48 mb-4'>
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  fill
+                  className='object-cover rounded border'
+                  sizes='(max-width: 768px) 100vw, 50vw'
+                />
+              </div>
+            )}
             <h2 className='text-xl font-semibold mb-2'>{item.name}</h2>
             <p className='text-gray-600 mb-2'>{item.description}</p>
             <span className='font-bold text-green-700'>R{item.price}</span>

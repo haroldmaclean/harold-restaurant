@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 export default function AddMenuItemPage() {
   const router = useRouter()
@@ -10,6 +11,8 @@ export default function AddMenuItemPage() {
     name: '',
     description: '',
     price: '',
+    image:
+      'https://images.unsplash.com/photo-1604908177522-402950b6f2f5?w=800&h=600&fit=crop',
   })
 
   const [submitting, setSubmitting] = useState(false)
@@ -29,9 +32,7 @@ export default function AddMenuItemPage() {
     try {
       const res = await fetch('/api/menu/add', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
           price: parseFloat(form.price),
@@ -56,6 +57,33 @@ export default function AddMenuItemPage() {
     <main className='max-w-xl mx-auto p-6'>
       <h1 className='text-2xl font-bold mb-4'>Add New Menu Item</h1>
       <form onSubmit={handleSubmit} className='space-y-4'>
+        {/* Image URL input */}
+        <div>
+          <label className='block mb-1 font-medium'>Image URL</label>
+          <input
+            name='image'
+            type='url'
+            value={form.image}
+            onChange={handleChange}
+            className='w-full border px-3 py-2 rounded'
+            placeholder='https://example.com/image.jpg'
+          />
+          {form.image && (
+            <div className='mt-4'>
+              <p className='mb-1 text-sm text-gray-500'>Preview:</p>
+              <div className='w-full h-48 relative'>
+                <Image
+                  src={form.image}
+                  alt='Image preview'
+                  fill
+                  className='rounded object-cover border'
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Name */}
         <div>
           <label className='block mb-1 font-medium'>Name</label>
           <input
@@ -67,6 +95,7 @@ export default function AddMenuItemPage() {
           />
         </div>
 
+        {/* Description */}
         <div>
           <label className='block mb-1 font-medium'>Description</label>
           <textarea
@@ -79,6 +108,7 @@ export default function AddMenuItemPage() {
           />
         </div>
 
+        {/* Price */}
         <div>
           <label className='block mb-1 font-medium'>Price (R)</label>
           <input
@@ -92,6 +122,7 @@ export default function AddMenuItemPage() {
           />
         </div>
 
+        {/* Submit */}
         <button
           type='submit'
           disabled={submitting}
@@ -100,6 +131,7 @@ export default function AddMenuItemPage() {
           {submitting ? 'Adding...' : 'Add Item'}
         </button>
 
+        {/* Error */}
         {error && <p className='text-red-600 mt-2'>{error}</p>}
       </form>
     </main>

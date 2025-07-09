@@ -4,6 +4,7 @@ export type MenuItemType = {
   name: string
   description: string
   price: number // <-- changed from string to number
+  image?: string
   createdAt?: string
   updatedAt?: string
 }

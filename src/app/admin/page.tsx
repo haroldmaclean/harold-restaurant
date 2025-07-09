@@ -1,5 +1,3 @@
-// src/app/admin/page.tsx
-
 import { cookies as getCookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import jwt, { JwtPayload } from 'jsonwebtoken'
@@ -32,6 +30,7 @@ export default async function AdminPage() {
       name: string
       description: string
       price: number
+      image?: string
     }
 
     const rawItems = await MenuItem.find().lean<RawMenuItem[]>()
@@ -41,6 +40,7 @@ export default async function AdminPage() {
       name: item.name,
       description: item.description,
       price: item.price,
+      image: item.image || '',
     }))
 
     return (
@@ -50,7 +50,6 @@ export default async function AdminPage() {
         <div className='flex justify-between items-center mb-6'>
           <h1 className='text-3xl font-bold'>Admin Dashboard</h1>
 
-          {/* ✅ Logout Button using POST */}
           <form method='POST' action='/api/auth/logout'>
             <button
               type='submit'

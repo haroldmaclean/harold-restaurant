@@ -1,16 +1,30 @@
+// src/app/api/menu/add/route.ts
+
 import { NextRequest, NextResponse } from 'next/server'
 import { connectDB } from '@/lib/mongodb'
 import { MenuItem } from '@/models/MenuItem'
+
+type NewItem = {
+  name: string
+  description: string
+  price: number
+  image?: string
+}
 
 export async function POST(req: NextRequest) {
   try {
     await connectDB()
     const body = await req.json()
 
-    const items = Array.isArray(body) ? body : [body] // support single or multiple
+    const items: NewItem[] = Array.isArray(body) ? body : [body]
 
     const validated = items.every(
-      (item) => item.name && item.description && typeof item.price === 'number'
+      (item) =>
+        item.name?.trim() &&
+        item.description?.trim() &&
+        typeof item.price === 'number' &&
+        !isNaN(item.price) &&
+        (!item.image || typeof item.image === 'string')
     )
 
     if (!validated) {
@@ -20,9 +34,10 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    await MenuItem.insertMany(items)
+    const result = await MenuItem.insertMany(items)
+
     return NextResponse.json(
-      { message: 'Items added successfully' },
+      { message: 'Items added successfully', inserted: result.length },
       { status: 201 }
     )
   } catch (error) {

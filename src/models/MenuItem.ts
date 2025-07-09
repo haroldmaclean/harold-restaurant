@@ -4,7 +4,8 @@ const MenuItemSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     description: { type: String, required: true },
-    price: { type: Number, required: true }, // ✅ changed to Number
+    price: { type: Number, required: true },
+    image: { type: String, required: true }, // ✅ Add image field
   },
   { timestamps: true }
 )

@@ -3,6 +3,7 @@
 import { MenuItemType } from '@/types'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface Props {
   item: MenuItemType
@@ -20,7 +21,7 @@ export default function AdminItemCard({ item }: Props) {
     })
 
     if (res.ok) {
-      router.refresh() // Refresh page data after delete
+      router.refresh()
     } else {
       alert('Failed to delete item.')
     }
@@ -28,6 +29,19 @@ export default function AdminItemCard({ item }: Props) {
 
   return (
     <div className='bg-white p-4 rounded-lg shadow border relative'>
+      {/* ✅ Optional image preview */}
+      {item.image && (
+        <div className='relative w-full h-40 mb-4'>
+          <Image
+            src={item.image}
+            alt={item.name}
+            fill
+            className='object-cover rounded-md border'
+            sizes='(max-width: 768px) 100vw, 50vw'
+          />
+        </div>
+      )}
+
       <h2 className='text-xl font-semibold'>{item.name}</h2>
       <p className='text-gray-600 mb-2'>{item.description}</p>
       <span className='text-green-700 font-bold'>R{item.price}</span>
