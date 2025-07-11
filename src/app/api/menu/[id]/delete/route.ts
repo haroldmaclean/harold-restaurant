@@ -1,8 +1,9 @@
 // src/app/api/menu/[id]/delete/route.ts
 
 import { NextRequest, NextResponse } from 'next/server'
-import MenuItem from '@/models/MenuItem'
-import dbConnect from '@/lib/dbConnect'
+import { MenuItem } from '@/models/MenuItem'
+
+import { connectDB } from '@/lib/mongodb'
 
 export async function DELETE(
   req: NextRequest,
@@ -10,7 +11,7 @@ export async function DELETE(
 ) {
   const { id } = context.params
 
-  await dbConnect()
+  await connectDB()
 
   try {
     const deletedItem = await MenuItem.findByIdAndDelete(id)
