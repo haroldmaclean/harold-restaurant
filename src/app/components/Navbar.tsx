@@ -7,9 +7,10 @@ import { Menu, X, ShoppingCart } from 'lucide-react'
 import { useCart } from '@/context/CartContext'
 
 export default function Navbar() {
+  const { cartItems } = useCart()
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const { cart } = useCart()
+  // const { cart } = useCart()
 
   useEffect(() => {
     const token = localStorage.getItem('token')
@@ -58,9 +59,9 @@ export default function Navbar() {
           {/* Cart Icon */}
           <Link href='/cart' className='relative'>
             <ShoppingCart className='text-gray-700 hover:text-blue-600' />
-            {cart.length > 0 && (
+            {cartItems.length > 0 && (
               <span className='absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 rounded-full'>
-                {cart.length}
+                {cartItems.length}
               </span>
             )}
           </Link>
@@ -132,7 +133,7 @@ export default function Navbar() {
             className='flex items-center gap-1'
           >
             <ShoppingCart className='text-gray-700' size={20} />
-            <span>Cart ({cart.length})</span>
+            <span>Cart ({cartItems.length})</span>
           </Link>
         </div>
       )}

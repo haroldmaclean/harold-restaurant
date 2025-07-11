@@ -5,12 +5,14 @@ import { Search, XCircle } from 'lucide-react'
 import { MenuItemType } from '@/types'
 import Image from 'next/image'
 import { useCart } from '@/context/CartContext'
+import { useRouter } from 'next/navigation'
 
 export default function MenuPage() {
   const [items, setItems] = useState<MenuItemType[]>([])
   const [filtered, setFiltered] = useState<MenuItemType[]>([])
   const [query, setQuery] = useState('')
   const { addToCart } = useCart()
+  const router = useRouter()
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -86,7 +88,10 @@ export default function MenuPage() {
                 Price: R{item.price.toFixed(2)}
               </span>
               <button
-                onClick={() => addToCart(item)}
+                onClick={() => {
+                  addToCart(item)
+                  router.push('/checkout') // 🚀 Navigate after adding
+                }}
                 className='w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded text-sm transition'
               >
                 Add to Cart
