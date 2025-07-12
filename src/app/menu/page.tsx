@@ -6,7 +6,12 @@ import { MenuItemType } from '@/types'
 import Image from 'next/image'
 import { useCart } from '@/context/CartContext'
 import { useRouter } from 'next/navigation'
-import FoodCarousel from '../components/FoodCarousel'
+import dynamic from 'next/dynamic'
+
+// ✅ Dynamic import with SSR disabled for carousel autoplay to work on Vercel
+const FoodCarousel = dynamic(() => import('@/components/FoodCarousel'), {
+  ssr: false,
+})
 
 export default function MenuPage() {
   const [items, setItems] = useState<MenuItemType[]>([])
@@ -43,7 +48,7 @@ export default function MenuPage() {
     <main className='p-8 max-w-4xl mx-auto'>
       <h1 className='text-3xl font-bold mb-6 text-center'>Our Menu</h1>
 
-      {/* ✅ Wrapped carousel in styled section */}
+      {/* ✅ Carousel now client-only to avoid SSR bugs */}
       <section className='mb-10'>
         <FoodCarousel />
       </section>
@@ -96,7 +101,7 @@ export default function MenuPage() {
               <button
                 onClick={() => {
                   addToCart(item)
-                  router.push('/checkout') // 🚀 Navigate after adding
+                  router.push('/checkout')
                 }}
                 className='w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded text-sm transition'
               >
