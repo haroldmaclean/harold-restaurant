@@ -6,6 +6,7 @@ import { MenuItemType } from '@/types'
 import Image from 'next/image'
 import { useCart } from '@/context/CartContext'
 import { useRouter } from 'next/navigation'
+import FoodCarousel from '../components/FoodCarousel'
 
 export default function MenuPage() {
   const [items, setItems] = useState<MenuItemType[]>([])
@@ -41,6 +42,11 @@ export default function MenuPage() {
   return (
     <main className='p-8 max-w-4xl mx-auto'>
       <h1 className='text-3xl font-bold mb-6 text-center'>Our Menu</h1>
+
+      {/* ✅ Wrapped carousel in styled section */}
+      <section className='mb-10'>
+        <FoodCarousel />
+      </section>
 
       <div className='flex items-center gap-2 max-w-md mx-auto mb-6'>
         <div className='relative w-full'>

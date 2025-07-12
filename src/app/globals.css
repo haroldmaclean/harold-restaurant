@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ✅ Keen Slider CSS (place AFTER Tailwind directives) */
+@import url('keen-slider/keen-slider.min.css');
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
