@@ -18,9 +18,10 @@
         "name": "next"
       }
     ],
-    "baseUrl": ".", // ✅ Required for path aliases
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"] // ✅ Now you can import using "@/components/..." etc.
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/app/components/*"]
     }
   },
   "include": [
