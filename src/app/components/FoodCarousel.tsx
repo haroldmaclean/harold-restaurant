@@ -1,23 +1,23 @@
 'use client'
 
+import { useKeenSliderWithAutoplay } from '@/lib/useKeenSliderWithAutoplay'
 import { useEffect, useState } from 'react'
+import { MenuItemType } from '@/types'
 import Image from 'next/image'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useKeenSliderWithAutoplay } from '@/lib/useKeenSliderWithAutoplay'
-import { MenuItemType } from '@/types'
 import 'keen-slider/keen-slider.min.css'
 
 export default function FoodCarousel() {
-  const [items, setItems] = useState<MenuItemType[]>([])
-
   const [sliderRef, instanceRef, currentSlide, progress, startAutoplay] =
     useKeenSliderWithAutoplay(3000)
+
+  const [items, setItems] = useState<MenuItemType[]>([])
 
   useEffect(() => {
     const fetchItems = async () => {
       const res = await fetch('/api/menu')
       const data = await res.json()
-      setItems(data.slice(0, 5)) // Limit to 5
+      setItems(data.slice(0, 5))
     }
 
     fetchItems()
@@ -29,10 +29,10 @@ export default function FoodCarousel() {
         {items.map((item, index) => (
           <div
             key={item._id}
-            className='keen-slider__slide flex flex-col items-center justify-center px-4'
+            className='keen-slider__slide flex flex-col items-center justify-center px-4 pb-4'
           >
             <Image
-              src={item.image!}
+              src={item.image ?? '/placeholder.jpg'}
               alt={item.name}
               width={600}
               height={400}
@@ -42,11 +42,13 @@ export default function FoodCarousel() {
             <h2 className='mt-2 text-lg font-semibold text-center'>
               {item.name}
             </h2>
+            <p className='text-green-600 text-sm font-medium'>Special Offer!</p>
+            <p className='text-blue-800 font-bold'>R{item.price.toFixed(2)}</p>
           </div>
         ))}
       </div>
 
-      {/* Arrows */}
+      {/* Navigation Arrows */}
       <button
         onClick={() => {
           instanceRef.current?.prev()
@@ -70,11 +72,11 @@ export default function FoodCarousel() {
       </button>
 
       {/* Progress Bar */}
-      <div className='w-full h-1 bg-gray-200 mt-4 rounded overflow-hidden'>
+      <div className='h-1 w-full bg-gray-300 mt-4 rounded overflow-hidden'>
         <div
-          className='h-full bg-blue-600 transition-all duration-100 ease-linear'
+          className='h-full bg-blue-600 transition-all duration-75'
           style={{ width: `${progress}%` }}
-        />
+        ></div>
       </div>
     </div>
   )
