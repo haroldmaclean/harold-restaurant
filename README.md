@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Restaurant SaaS Template 🍽️
 
-## Getting Started
+A modern, responsive restaurant Software-as-a-Service (SaaS) template built with **Next.js 14**, **Tailwind CSS**, and powered by **Vercel**. Features include:
 
-First, run the development server:
+- 🍔 Food carousel with autoplay, navigation arrows, and visual progress bar
+- 📱 Mobile-first design
+- 🌐 Dynamic data fetching from API
+- 🧠 Smart layout with optimized images
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- ✅ Next.js 14 App Router
+- ✅ Tailwind CSS styling
+- ✅ Image carousel with Keen Slider
+- ✅ Autoplay with visual progress bar
+- ✅ Responsive for mobile and desktop
+- ✅ API-driven menu (from `/api/menu`)
+- ✅ Modular code structure for scalability
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📸 Screenshots
 
-To learn more about Next.js, take a look at the following resources:
+Coming soon…
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🌐 Live Demo
 
-## Deploy on Vercel
+👉 [restaurant-saas-template.vercel.app](https://restaurant-saas-template.vercel.app)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛠️ Getting Started
+
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/haroldmaclean/restaurant-saas-template.git
+   ```
